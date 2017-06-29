@@ -4,6 +4,7 @@
 using namespace std;
 int main()
 {
+		int test=0;
 	vector<int> vecint(10,5);
 	for(auto a=vecint.begin();a!=vecint.end();a++){
 		(*a) *=2;
