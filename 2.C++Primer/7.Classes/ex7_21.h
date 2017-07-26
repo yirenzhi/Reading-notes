@@ -1,13 +1,20 @@
+#ifndef ex7_21_h
+#define ex7_21_h
+
 #include<iostream>
 #include<string>
 using namespace std;
-struct Sales_data;
-std::istream &read(std::istream&, Sales_data&);
-struct Sales_data{
+
+class Sales_data{
+	friend  std::istream &read(std::istream& ist, Sales_data& rhs);
+	friend  Sales_data add(const Sales_data& lhs, const Sales_data& rhs);
+	friend  std::ostream &print(std::ostream& ost, const Sales_data& rhs);
+public:
+
 	Sales_data()=default;
 	Sales_data(const string &s):bookNo(s){}
 	Sales_data(const string &s, unsigned n, double p):
-			bookNo(s),units_sold(n),revenue(p){}
+			bookNo(s),units_sold(n),revenue(p*n){}
 	Sales_data(std::istream &in)
 	{
 		read(in,*this);
@@ -17,19 +24,12 @@ struct Sales_data{
 	}
 	Sales_data& combine(const Sales_data&);
 	double avg_price() const;
-
+private:
+	
 	string bookNo;
 	unsigned units_sold =0;
 	double revenue = 0.0;
 };
-/*
-Sales_data::Sales_data(std::istream &is)
-{
-	read(is, *this);
-}*/
-Sales_data add(const Sales_data&, const Sales_data&);
-std::ostream &print(std::ostream&, const Sales_data&);
-
 double Sales_data::avg_price()const{
 	if (units_sold) {
 		return revenue/units_sold;
@@ -65,7 +65,7 @@ std::istream &read(std::istream& ist, Sales_data& rhs)
 	rhs.revenue=price*rhs.units_sold;
 	return ist;
 }
-
+/*
 int main()
 {
 	
@@ -84,7 +84,6 @@ int main()
 		print(cout, total);
 	}
 	
-	/*
 	Sales_data data1;
 	Sales_data data2("book123");
 	Sales_data data3("book1234",5,10);
@@ -96,6 +95,7 @@ int main()
 	print(cout,data3);
 	print(cout,data4);
 	print(cout,data5);
-*/	
     return 0;
 }
+*/
+#endif
