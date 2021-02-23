@@ -1,16 +1,25 @@
+#pragma once
 #include<iostream>
 #include<string>
 using namespace std;
-struct Sales_data{
+class Sales_data{
+friend ostream &print(ostream& ost,const Sales_data&data1);
+friend istream &read(istream& ist,Sales_data&data1);
+public:
     Sales_data()=default;
-    Sales_data(const string &s):bookNo(s){}
-    Sales_data(const string &s,unsigned n,double p):bookNo(s),units_sold(n),revenue(n*p){}
-    Sales_data(istream &);
+    Sales_data(const string&s):bookNo(s){}
+    Sales_data(const string&s,const unsigned &n,const double& p):bookNo(s),units_sold(n),revenue(p*n){}
+    Sales_data(istream&ist){
+        double price;
+        ist>>this->bookNo>>this->units_sold>>price;
+        this->revenue=this->units_sold*price;
+    }
     string isbn() const{
         return bookNo;
     }
    Sales_data& combine(const Sales_data&);
    double avg_price() const;
+private:
     string bookNo;
     unsigned units_sold=0;
     double revenue = 0.0;
@@ -36,6 +45,7 @@ ostream &print(ostream& ost,const Sales_data&data1)
 {
     ost<<"bookNo:"<<data1.bookNo<<" sold:"<<data1.units_sold<<" revenue:"<<data1.revenue<<endl;
     return ost;
+
 }
 istream &read(istream& ist,Sales_data&data1)
 {
@@ -44,28 +54,4 @@ istream &read(istream& ist,Sales_data&data1)
     data1.revenue=data1.units_sold*price;
     return ist;
     
-}
-int main()
-{
-    Sales_data total;
-    if(read(cin,total)){
-        Sales_data trans;
-        while(read(cin,trans))
-        {
-            if(trans.isbn()==total.isbn())
-            {
-                total.combine(trans);
-            }
-            else{
-                print(cout,total);
-                total=trans;
-            }
-        }
-        print(cout,total);
-    }
-    else{
-        cerr<<"No data?!"<<endl;
-        return -1;
-    }
-    return 0;
 }
